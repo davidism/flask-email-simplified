@@ -12,6 +12,11 @@ dependencies = [
     "flask>=3",
 ]
 
+[project.urls]
+Documentation = "https://flask-email-simplified.readthedocs.io"
+Changes = "https://flask-email-simplified.readthedocs.io/en/latest/changes/"
+Source = "https://github.com/davidism/flask-email-simplified/"
+
 [build-system]
 requires = ["pdm-backend>=2.4"]
 build-backend = "pdm.backend"

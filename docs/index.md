@@ -22,6 +22,10 @@ $ pip install flask-email-simplified
 
 [PyPI]: https://pypi.org/project/flask-email-simiplified
 
+## Source
+
+The project is hosted on GitHub: <https://github.com/davidism/flask-email-simplified>.
+
 ```{toctree}
 :hidden:
 
