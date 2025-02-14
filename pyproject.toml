@@ -1,6 +1,6 @@
 [project]
 name = "flask-email-simplified"
-version = "0.1.0"
+version = "0.2.0.dev"
 description = "Send email in Flask using the Email-Simplified library."
 readme = "README.md"
 authors = [{ name = "David Lord" }]
