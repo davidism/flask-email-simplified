@@ -12,6 +12,11 @@ dependencies = [
     "flask>=3",
 ]
 
+[project.optional-dependencies]
+quart = [
+    "quart>=0.20",
+]
+
 [project.urls]
 Documentation = "https://flask-email-simplified.readthedocs.io"
 Changes = "https://flask-email-simplified.readthedocs.io/en/latest/changes/"
@@ -28,6 +33,7 @@ dev = [
     "pyright",
     "pytest",
     "pytest-cov",
+    "quart",
     "ruff",
     "tox",
     "tox-uv",
@@ -50,11 +56,13 @@ pre-commit = [
 tests = [
     "pytest",
     "pytest-cov",
+    "quart",
 ]
 typing = [
     "mypy",
     "pyright",
     "pytest",
+    "quart",
 ]
 
 [tool.pytest.ini_options]
