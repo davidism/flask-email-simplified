@@ -1,6 +1,6 @@
 ## Version 0.2.0
 
-Unreleased
+Released 2025-02-14
 
 -   Support Quart.
 
