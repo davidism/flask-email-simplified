@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import typing as t
 from email.message import EmailMessage as _EmailMessage
 from weakref import WeakKeyDictionary
 
 from email_simplified import get_handler_class
 from email_simplified import Message
 from email_simplified.handlers.base import EmailHandler
-from flask import current_app
+from flask import Flask
 from flask.sansio.app import App  # pyright: ignore
 
 
@@ -17,6 +18,10 @@ class EmailExtension:
 
     def __init__(self, app: App | None = None) -> None:
         self._handlers: WeakKeyDictionary[App, EmailHandler] = WeakKeyDictionary()
+
+        # Track whether Flask and/or Quart apps have been registered.
+        self._flask_ctx: t.Any = None
+        self._quart_ctx: t.Any = None
 
         if app is not None:
             self.init_app(app)
@@ -37,6 +42,17 @@ class EmailExtension:
         :class:`.TestEmailHandler` unless ``EMAIL_TESTING_KEEP_HANDLER`` is
         ``True``.
         """
+        app_ctx: t.Any
+
+        if isinstance(app, Flask):
+            from flask.globals import app_ctx
+
+            self._flask_ctx = app_ctx
+        else:
+            from quart.globals import app_ctx
+
+            self._quart_ctx = app_ctx
+
         config = app.config.get_namespace("EMAIL_")
 
         if app.testing and not config.get("testing_keep_handler", False):
@@ -56,7 +72,22 @@ class EmailExtension:
         When not in an active request or CLI command, an app context must be
         pushed manually.
         """
-        return self._handlers[current_app._get_current_object()]  # type: ignore[attr-defined]
+        error: RuntimeError | None = None
+
+        for app_ctx in self._flask_ctx, self._quart_ctx:
+            if app_ctx is None:
+                continue
+
+            try:
+                return self._handlers[app_ctx.app]
+            except RuntimeError as e:
+                if error is None:
+                    error = e
+
+        if error is None:
+            raise RuntimeError("No applications are registered.")
+
+        raise error
 
     def send(
         self, messages: Message | _EmailMessage | list[Message | _EmailMessage]
